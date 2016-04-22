@@ -1,4 +1,4 @@
-Mais uma iniciativad da Fundação Teles, o Jogador de Jogo da Velheitor 2015.9 tem o objetivo de <insira um objetivo aqui (to com preguiça)>.
+Mais uma iniciativad da Fundação Teles, o Jogador de Jogo da Velheitor 2015.9 tem o objetivo de [insira um objetivo aqui (to com preguiça)].
 
 
 Observações: ainda não sei o que estou fazendo da minha vida
