@@ -219,18 +219,24 @@ class pvcom {
     private Scanner scan = new Scanner(System.in);
     private Scanner scan2;
     private boolean jog = true;
-    boolean altern = true;
+    boolean altern = false;
     int uj;
+    int pj;
 
     private velha jdv = new velha();
 
     void jogo() {
+        for (int i = 0; i < 5; i++) {
+            way[i] = 0;
+        }
+        uj = 0;
+        pj = 0;
+
         if (altern) {
             System.out.print("\n\t~~Computador começa a jogar~~\n\n");
             do {
                 //COMPUTADOR
                 jdv.j2(computador());
-                System.out.print("\n\t~~joguei~~\n\n");
                 //PESSOA
                 jog = true;
                 while (jog && jdv.vencedor() == 0) {
@@ -248,7 +254,29 @@ class pvcom {
                 }
             } while (jdv.vencedor() == 0);
         } else {
+            System.out.print("\n\t~~Você começa a jogar~~\n\n");
+            do {
+                //PESSOA
+                jog = true;
+                while (jog && jdv.vencedor() == 0) {
+                    int j;
+                    jdv.exibir_board();
+                    System.out.print("\t(insira o bloco em que quer jogar)"
+                            + "\n\n\tVOCÊ: ");
+                    scan2 = new Scanner(System.in);
+                    j = scan2.nextInt();
+                    if (jdv.j_poss(j)) {
+                        jdv.j1(j);
+                        uj = j;
+                        jog = false;
+                    }
+                }
 
+                //COMPUTADOR
+                if (jdv.vencedor() == 0) {
+                    jdv.j2(computador());
+                }
+            } while (jdv.vencedor() == 0);
         }
 
         //EXIBIR VENCEDORES (ou perdedores)
@@ -286,10 +314,6 @@ class pvcom {
             altern = true;
         }
         //*/
-        for (int i = 0; i < 5; i++) {
-            way[i] = 0;
-        }
-        uj = 0;
     }
 
     //auxilia o computador a saber que caminho de jogadas deve seguir
@@ -368,15 +392,174 @@ class pvcom {
                 }
                 way[1] = 1;
             }
+            //computador sendo o SEGUNDO a jogar
+        } else {
+            if (way[0] == 0) {
+                if (uj == 1 || uj == 3 || uj == 7 || uj == 9) {
+                    way[0] = 1;
+                    pj = uj;
+                } else if (uj == 2 || uj == 4 || uj == 6 || uj == 8) {
+                    way[0] = 2;
+                    pj = uj;
+                } else if (uj == 5) {
+                    way[0] = 3;
+                    pj = uj;
+                }
+            }
 
-        } //computador sendo o SEGUNDO a jogar
-        else if (way[0] == 0) {
-            if (uj == 1 || uj == 3 || uj == 7 || uj == 9) {
-                way[0] = 1;
-            } else if (uj == 2 || uj == 4 || uj == 6 || uj == 8) {
-                way[0] = 2;
-            } else if (uj == 5) {
-                way[0] = 3;
+            if (way[0] == 1) {
+                jogada = 5;
+
+                if (way[1] == 0) {
+                    if ((pj == 1 && uj == 9) || (pj == 9 && uj == 1) || (pj == 3 && uj == 7) || (pj == 7 && uj == 3)) {
+                        way[1] = 1;
+                    } else if ((pj == 1 && (uj == 2 || uj == 3 || uj == 4 || uj == 7))
+                            || (pj == 3 && (uj == 1 || uj == 2 || uj == 6 || uj == 7))
+                            || (pj == 7 && (uj == 1 || uj == 4 || uj == 8 || uj == 9))
+                            || (pj == 9 && (uj == 7 || uj == 8 || uj == 3 || uj == 6))) {
+                        way[1] = 2;
+                    } else if ((pj == 1 && (uj == 6 || uj == 8))
+                            || (pj == 3 && (uj == 4 || uj == 8))
+                            || (pj == 7 && (uj == 2 || uj == 6))
+                            || (pj == 9 && (uj == 2 || uj == 4))) {
+                        way[1] = 3;
+                    }
+                }
+
+                if (way[1] == 1) {
+                    jogada = 6;
+                    if (way[2] == 1) {
+                        jogada = induz();
+                    }
+                    way[2] = 1;
+                }
+
+                if (way[1] == 2) {
+                    jogada = induz();
+                }
+
+                if (way[1] == 3) {
+                    if (way[2] == 0) {
+                        if (pj == 1 && uj == 6) {
+                            jogada = 8;
+                        } else if (pj == 1 && uj == 8) {
+                            jogada = 6;
+                        } else if (pj == 3 && uj == 8) {
+                            jogada = 4;
+                        } else if (pj == 3 && uj == 4) {
+                            jogada = 8;
+                        } else if (pj == 7 && uj == 6) {
+                            jogada = 2;
+                        } else if (pj == 7 && uj == 2) {
+                            jogada = 6;
+                        } else if (pj == 9 && uj == 4) {
+                            jogada = 2;
+                        } else if (pj == 9 && uj == 2) {
+                            jogada = 4;
+                        }
+                    }
+                    if (way[2] == 1) {
+                        jogada = induz();
+                    }
+                    way[2] = 1;
+                }
+            }
+            if (way[0] == 2) {
+                jogada = 5;
+
+                if (way[1] == 0) {
+                    if ((pj == 2 && uj == 8) || (pj == 8 && uj == 2) || (pj == 4 && uj == 6) || (pj == 6 && uj == 4)) {
+                        way[1] = 1;
+                    } else if ((pj == 2 && (uj == 1 || uj == 3))
+                            || (pj == 4 && (uj == 1 || uj == 7))
+                            || (pj == 6 && (uj == 3 || uj == 9))
+                            || (pj == 8 && (uj == 7 || uj == 9))) {
+                        way[1] = 2;
+                    } else if ((pj == 2 && (uj == 7 || uj == 9 || uj == 4 || uj == 6))
+                            || (pj == 4 && (uj == 3 || uj == 9 || uj == 2 || uj == 8))
+                            || (pj == 6 && (uj == 1 || uj == 7 || uj == 2 || uj == 8))
+                            || (pj == 8 && (uj == 1 || uj == 3 || uj == 4 || uj == 6))) {
+                        way[1] = 3;
+                    }
+                }
+
+                if (way[1] == 1) {
+                    jogada = 3;
+                    if (way[2] == 1) {
+                        jogada = induz();
+                    }
+                    way[2] = 1;
+                }
+
+                if (way[1] == 2) {
+                    jogada = induz();
+                }
+
+                if (way[1] == 3) {
+                    if (way[2] == 0) {
+                        if (pj == 2 && (uj == 7 || uj == 4)) {
+                            jogada = 1;
+                        } else if (pj == 2 && (uj == 9 || uj == 6)) {
+                            jogada = 3;
+                        } else if (pj == 4 && (uj == 3 || uj == 2)) {
+                            jogada = 1;
+                        } else if (pj == 4 && (uj == 9 || uj == 8)) {
+                            jogada = 7;
+                        } else if (pj == 6 && (uj == 1 || uj == 2)) {
+                            jogada = 3;
+                        } else if (pj == 6 && (uj == 7 || uj == 8)) {
+                            jogada = 9;
+                        } else if (pj == 8 && (uj == 1 || uj == 4)) {
+                            jogada = 7;
+                        } else if (pj == 8 && (uj == 3 || uj == 6)) {
+                            jogada = 9;
+                        }
+                    }
+                    if (way[2] == 1) {
+                        jogada = induz();
+                        System.out.print("coco");
+                    }
+                    way[2] = 1;
+                }
+
+            }
+            if (way[0] == 3) {
+                jogada = 7;
+
+                if (way[1] == 0) {
+                    if (uj == 4 || uj == 8) {
+                        way[1] = 1;
+                    } else if (uj == 3) {
+                        way[1] = 2;
+                    } else if (uj == 1 || uj == 2 || uj == 6 || uj == 9) {
+                        way[1] = 3;
+                    }
+                }
+
+                if (way[1] == 1) {
+                    jogada = induz();
+                    if (uj == 3) {
+                        if (jdv.j_poss(1)) {
+                            jogada = 1;
+                        } else if (jdv.j_poss(9)) {
+                            jogada = 9;
+                        } else {
+                            jogada = induz();
+                        }
+                    }
+                }
+
+                if (way[1] == 2) {
+                    jogada = 1;
+                    if (way[2] == 1) {
+                        jogada = induz();
+                    }
+                    way[2] = 1;
+                }
+
+                if (way[1] == 3) {
+                    jogada = induz();
+                }
             }
         }
         return jogada;
@@ -409,7 +592,7 @@ class pvcom {
     int induz() {
         int jogada = 0;
         boolean jogando = true;
-
+        //TENTA GANHAR
         //verifica se possível ganhar nas linhas
         for (int l = 1; l < 4 && jogando; l++) {
             if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 2) {
@@ -459,6 +642,7 @@ class pvcom {
             jogando = false;
         }
 
+        //IMPEDIR
         //verifica se precisa impedir nas linhas
         for (int l = 1; l < 4 && jogando; l++) {
             if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 1 && jdv.board(l, 3) == 1) {
@@ -508,60 +692,62 @@ class pvcom {
             jogando = false;
         }
 
-        return jogada;
-    }
-
-    int induz_base() {
-        int jogada = 0;
-        boolean jogando = true;
-
-        //verifica se possível ganhar nas linhas
+        //MARCAR PROPÍCIO
+        //verifica onde é melhor nas linhas
         for (int l = 1; l < 4 && jogando; l++) {
-            if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 2) {
-                jogada = bloco(l, 1);
-                jogando = false;
-            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 2) {
+            if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 0) {
                 jogada = bloco(l, 2);
                 jogando = false;
-            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 0) {
-                jogada = bloco(l, 3);
+            } else if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 0) {
+                jogada = bloco(l, 1);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 2) {
+                jogada = bloco(l, 2);
                 jogando = false;
             }
         }
 
-        //verifica se possível ganhar nas colunas
+        //verifica onde é melhor nas colunas
         for (int c = 1; c < 4 && jogando; c++) {
-            if (jdv.board(1, c) == 0 && jdv.board(2, c) == 2 && jdv.board(3, c) == 2) {
-                jogada = bloco(1, c);
-                jogando = false;
-            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 0 && jdv.board(3, c) == 2) {
+            if (jdv.board(1, c) == 2 && jdv.board(2, c) == 0 && jdv.board(3, c) == 0) {
                 jogada = bloco(2, c);
                 jogando = false;
-            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 2 && jdv.board(3, c) == 0) {
-                jogada = bloco(3, c);
+            } else if (jdv.board(1, c) == 0 && jdv.board(2, c) == 2 && jdv.board(3, c) == 0) {
+                jogada = bloco(1, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 0 && jdv.board(2, c) == 0 && jdv.board(3, c) == 2) {
+                jogada = bloco(2, c);
                 jogando = false;
             }
         }
 
-        //verifica se possível ganhar nas diagonais
-        if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 2 && jogando) {
+        //verifica onde é melhor nas diagonais
+        if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 0 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 0 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 0 && jogando) {
             jogada = bloco(1, 1);
             jogando = false;
-        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 2 && jogando) {
+        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 0 && jogando) {
             jogada = bloco(1, 3);
             jogando = false;
-        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 2 && jogando) {
+        } else if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 2 && jogando) {
             jogada = bloco(2, 2);
             jogando = false;
-        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 2 && jogando) {
+        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 2 && jogando) {
             jogada = bloco(2, 2);
             jogando = false;
-        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 0 && jogando) {
-            jogada = bloco(3, 3);
-            jogando = false;
-        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 0 && jogando) {
-            jogada = bloco(3, 1);
-            jogando = false;
+        }
+
+        //SE NADA DER CERTO ESCOLHE O PRIMEIRO LUGAR LIVRE PRA MARCAR
+        for (int b = 1; b < 10 && jogando; b++) {
+            if (jdv.getb(b) == 0) {
+                jogada = b;
+                jogando = false;
+            }
         }
 
         return jogada;
