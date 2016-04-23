@@ -127,6 +127,7 @@ class play {
 
         do {
             if (pc) {
+                //no modo player vs computador, a cada rodada altera quem será o jogador inicial
                 computador.jogo();
             } else {
                 jogador.jogo();
@@ -229,8 +230,7 @@ class pvcom {
             do {
                 //COMPUTADOR
                 jdv.j2(computador());
-                uj=jdv.uj();
-                
+                System.out.print("\n\t~~joguei~~\n\n");
                 //PESSOA
                 jog = true;
                 while (jog && jdv.vencedor() == 0) {
@@ -242,7 +242,7 @@ class pvcom {
                     j = scan2.nextInt();
                     if (jdv.j_poss(j)) {
                         jdv.j1(j);
-                        uj=jdv.uj();
+                        uj = j;
                         jog = false;
                     }
                 }
@@ -253,7 +253,14 @@ class pvcom {
 
         //EXIBIR VENCEDORES (ou perdedores)
         jdv.exibir_board();
-        if (jdv.vencedor() == 2) {
+        if (jdv.vencedor() == 1) {
+            System.out.print("\n\n"
+                    + "\nXXXXXXXXXXXXXXXXXXXXXXXX"
+                    + "\nO                      X"
+                    + "\nO código com erro, lek X"
+                    + "\nO                      X"
+                    + "\nOOOOOOOOOOOOOOOOOOOOOXXX");
+        } else if (jdv.vencedor() == 2) {
             System.out.print("\n\n"
                     + "\nOOOOOOOOOOOOOOOOOOOOO"
                     + "\nO                   O"
@@ -268,31 +275,285 @@ class pvcom {
                     + "\nP                             E"
                     + "\nERDEU~~PERDEU~~PERDEU~~PERDEU~~");
         }
+
         jdv.zerar();
 
         //faz a alternancia para o próximo jogo
+        /*
         if (altern) {
             altern = false;
         } else {
             altern = true;
         }
+        //*/
+        for (int i = 0; i < 3; i++) {
+            way[i] = 0;
+        }
+        uj = 0;
     }
 
+    //auxilia o computador a saber que caminho de jogadas deve seguir
+    int[] way = new int[3];
+
+    //aki é onde as jogadas do computador são 'pensadas'
     int computador() {
-        int jogada = 1;
+        int jogada = 0;
         //'altern' tb mostra quem começou a jogar
         if (altern) {
-            
+            if (way[0] == 0) {
+                jogada = 1;
+                if (uj == 3 || uj == 7 || uj == 5) {
+                    way[0] = 1;
+                } else if (uj == 2 || uj == 4) {
+                    way[0] = 3;
+                } else if (uj == 6 || uj == 8) {
+                    way[0] = 4;
+                } else if (uj == 9) {
+                    way[0] = 5;
+                }
+            }
+
+            if (way[0] == 1) {
+                jogada = 9;
+                if (way[1] == 1) {
+                    jogada = induz();
+                }
+                way[1] = 1;
+            }
+
+            if (way[0] == 3) {
+                jogada = 5;
+                if (way[2] == 0) {
+                    if (uj == 2) {
+                        way[2] = 1;
+                    } else if (uj == 4) {
+                        way[2] = 2;
+                    }
+                }
+
+                if (way[1] == 1) {
+                    jogada = induz();
+                    if (uj == 9) {
+                        if (way[2] == 1) {
+                            jogada = 7;
+                        } else if (way[2] == 2) {
+                            jogada = 3;
+                        }
+                    }
+                }
+                way[1] = 1;
+            }
+
+            if (way[0] == 4) {
+                jogada = 5;
+                if (way[1] == 1) {
+                    jogada = induz();
+                }
+                way[1] = 1;
+            }
+
+            if (way[0] == 9) {
+                jogada = 3;
+                if (way[1] == 1) {
+                    jogada = 7;
+                    if (way[2] == 1) {
+                        jogada = induz();
+                    }
+                    way[2] = 1;
+                }
+                way[1] = 1;
+            }
+
         } //
         else {
 
         }
+        return jogada;
+    }
+
+    int bloco(int linha, int coluna) {
+        int bloco = 0;
+        if (linha == 1 && coluna == 1) {
+            bloco = 1;
+        } else if (linha == 1 && coluna == 2) {
+            bloco = 2;
+        } else if (linha == 1 && coluna == 3) {
+            bloco = 3;
+        } else if (linha == 2 && coluna == 1) {
+            bloco = 4;
+        } else if (linha == 2 && coluna == 2) {
+            bloco = 5;
+        } else if (linha == 2 && coluna == 3) {
+            bloco = 6;
+        } else if (linha == 3 && coluna == 1) {
+            bloco = 7;
+        } else if (linha == 3 && coluna == 2) {
+            bloco = 8;
+        } else if (linha == 3 && coluna == 3) {
+            bloco = 9;
+        }
+        return bloco;
+    }
+
+    int induz() {
+        int jogada = 0;
+        boolean jogando = true;
+
+        //verifica se possível ganhar nas linhas
+        for (int l = 1; l < 4 && jogando; l++) {
+            if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 2) {
+                jogada = bloco(l, 1);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 2) {
+                jogada = bloco(l, 2);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 0) {
+                jogada = bloco(l, 3);
+                jogando = false;
+            }
+        }
+
+        //verifica se possível ganhar nas colunas
+        for (int c = 1; c < 4 && jogando; c++) {
+            if (jdv.board(1, c) == 0 && jdv.board(2, c) == 2 && jdv.board(3, c) == 2) {
+                jogada = bloco(1, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 0 && jdv.board(3, c) == 2) {
+                jogada = bloco(2, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 2 && jdv.board(3, c) == 0) {
+                jogada = bloco(3, c);
+                jogando = false;
+            }
+        }
+
+        //verifica se possível ganhar nas diagonais
+        if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 2 && jogando) {
+            jogada = bloco(1, 1);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 2 && jogando) {
+            jogada = bloco(1, 3);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 2 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 2 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 0 && jogando) {
+            jogada = bloco(3, 3);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 0 && jogando) {
+            jogada = bloco(3, 1);
+            jogando = false;
+        }
+
+        //verifica se precisa impedir nas linhas
+        for (int l = 1; l < 4 && jogando; l++) {
+            if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 1 && jdv.board(l, 3) == 1) {
+                jogada = bloco(l, 1);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 1 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 1) {
+                jogada = bloco(l, 2);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 1 && jdv.board(l, 2) == 1 && jdv.board(l, 3) == 0) {
+                jogada = bloco(l, 3);
+                jogando = false;
+            }
+        }
+
+        //verifica se precisa impedir nas colunas
+        for (int c = 1; c < 4 && jogando; c++) {
+            if (jdv.board(1, c) == 0 && jdv.board(2, c) == 1 && jdv.board(3, c) == 1) {
+                jogada = bloco(1, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 1 && jdv.board(2, c) == 0 && jdv.board(3, c) == 1) {
+                jogada = bloco(2, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 1 && jdv.board(2, c) == 1 && jdv.board(3, c) == 0) {
+                jogada = bloco(3, c);
+                jogando = false;
+            }
+        }
+
+        //verifica se precisa impedir nas diagonais
+        if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 1 && jdv.board(3, 3) == 1 && jogando) {
+            jogada = bloco(1, 1);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 1 && jdv.board(3, 1) == 1 && jogando) {
+            jogada = bloco(1, 3);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 1 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 1 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 1 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 1 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 1 && jdv.board(2, 2) == 1 && jdv.board(3, 3) == 0 && jogando) {
+            jogada = bloco(3, 3);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 1 && jdv.board(2, 2) == 1 && jdv.board(3, 1) == 0 && jogando) {
+            jogada = bloco(3, 1);
+            jogando = false;
+        }
 
         return jogada;
     }
-    
-    void indut(){
-        
+
+    int induz_base() {
+        int jogada = 0;
+        boolean jogando = true;
+
+        //verifica se possível ganhar nas linhas
+        for (int l = 1; l < 4 && jogando; l++) {
+            if (jdv.board(l, 1) == 0 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 2) {
+                jogada = bloco(l, 1);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 0 && jdv.board(l, 3) == 2) {
+                jogada = bloco(l, 2);
+                jogando = false;
+            } else if (jdv.board(l, 1) == 2 && jdv.board(l, 2) == 2 && jdv.board(l, 3) == 0) {
+                jogada = bloco(l, 3);
+                jogando = false;
+            }
+        }
+
+        //verifica se possível ganhar nas colunas
+        for (int c = 1; c < 4 && jogando; c++) {
+            if (jdv.board(1, c) == 0 && jdv.board(2, c) == 2 && jdv.board(3, c) == 2) {
+                jogada = bloco(1, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 0 && jdv.board(3, c) == 2) {
+                jogada = bloco(2, c);
+                jogando = false;
+            } else if (jdv.board(1, c) == 2 && jdv.board(2, c) == 2 && jdv.board(3, c) == 0) {
+                jogada = bloco(3, c);
+                jogando = false;
+            }
+        }
+
+        //verifica se possível ganhar nas diagonais
+        if (jdv.board(1, 1) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 2 && jogando) {
+            jogada = bloco(1, 1);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 0 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 2 && jogando) {
+            jogada = bloco(1, 3);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 3) == 2 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 0 && jdv.board(3, 1) == 2 && jogando) {
+            jogada = bloco(2, 2);
+            jogando = false;
+        } else if (jdv.board(1, 1) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 3) == 0 && jogando) {
+            jogada = bloco(3, 3);
+            jogando = false;
+        } else if (jdv.board(1, 3) == 2 && jdv.board(2, 2) == 2 && jdv.board(3, 1) == 0 && jogando) {
+            jogada = bloco(3, 1);
+            jogando = false;
+        }
+
+        return jogada;
     }
 }
 
@@ -301,7 +562,7 @@ class velha {
 
     private int[][] board = new int[3][3];
 
-    int get_b(int bloco) {
+    int getb(int bloco) {
         /*
             Para cada bloco (de 1 a 9) essas devem ser as coordenadas iniciais:
                 1-00 | 2-01 | 3-02
@@ -332,10 +593,9 @@ class velha {
         return this.board[l][c];
     }
 
-    private int ultim_bloco;
-
-    int uj() {
-        return ultim_bloco;
+    int board(int linha, int coluna) {
+        //de 1 à 3
+        return this.board[linha - 1][coluna - 1];
     }
 
     void zerar() {
@@ -442,7 +702,6 @@ class velha {
         }
 
         this.board[l][c] = 1;
-        ultim_bloco = this.board[l][c];
     }
 
     void j2(int bloco) {
@@ -474,7 +733,6 @@ class velha {
         }
 
         this.board[l][c] = 2;
-        ultim_bloco = this.board[l][c];
     }
 
     int vencedor() {
@@ -482,33 +740,33 @@ class velha {
         int vencedor = 0;
         //verifica se tem vencedor nas linhas
         for (int l = 1; l < 8 && jogando; l = l + 3) {
-            if (get_b(l) == get_b(l + 1) && get_b(l + 1) == get_b(l + 2) && get_b(l) != 0) {
-                vencedor = get_b(l);
+            if (getb(l) == getb(l + 1) && getb(l + 1) == getb(l + 2) && getb(l) != 0) {
+                vencedor = getb(l);
                 jogando = false;
             }
         }
 
         //verifica se tem vencedor nas colunas
         for (int c = 1; c < 4 && jogando; c++) {
-            if (get_b(c) == get_b(c + 3) && get_b(c + 3) == get_b(c + 6) && get_b(c) != 0) {
-                vencedor = get_b(c);
+            if (getb(c) == getb(c + 3) && getb(c + 3) == getb(c + 6) && getb(c) != 0) {
+                vencedor = getb(c);
                 jogando = false;
             }
         }
 
         //verifica se tem vencedor nas diagonais
-        if ((get_b(1) == get_b(5)) && (get_b(5) == get_b(9)) && (get_b(1) != 0) && (jogando)) {
-            vencedor = get_b(1);
+        if ((getb(1) == getb(5)) && (getb(5) == getb(9)) && (getb(1) != 0) && (jogando)) {
+            vencedor = getb(1);
             jogando = false;
-        } else if ((get_b(3) == get_b(5)) && (get_b(5) == get_b(7)) && (get_b(3) != 0) && (jogando)) {
-            vencedor = get_b(3);
+        } else if ((getb(3) == getb(5)) && (getb(5) == getb(7)) && (getb(3) != 0) && (jogando)) {
+            vencedor = getb(3);
             jogando = false;
         }
 
         //verifica se não há mais jogadas possíveis
         for (int b = 1; b < 10 && jogando; b++) {
             vencedor = 3;
-            if (get_b(b) == 0) {
+            if (getb(b) == 0) {
                 vencedor = 0;
                 jogando = false;
             }
