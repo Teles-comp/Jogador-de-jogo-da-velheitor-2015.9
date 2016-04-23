@@ -4,7 +4,7 @@ Mais uma iniciativad da Fundação Teles, o Jogador de Jogo da Velheitor 2015.9 
 Observações: ainda não sei o que estou fazendo da minha vida
 
 
-O programa ainda está em desenvolvimento e ainda não foi comentado.
+O programa ~~ainda está em desenvolvimento e ainda não foi comentado.~~ FICOU PRONTO Ô BUCETA GORDA
 
 
 Mais informações: 400289perdi
