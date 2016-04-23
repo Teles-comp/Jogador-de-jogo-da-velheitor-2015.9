@@ -219,7 +219,7 @@ class pvcom {
     private Scanner scan = new Scanner(System.in);
     private Scanner scan2;
     private boolean jog = true;
-    boolean altern = false;
+    boolean altern = true;
     int uj;
     int pj;
 
@@ -307,13 +307,11 @@ class pvcom {
         jdv.zerar();
 
         //faz a alternancia para o próximo jogo
-        /*
         if (altern) {
             altern = false;
         } else {
             altern = true;
         }
-        //*/
     }
 
     //auxilia o computador a saber que caminho de jogadas deve seguir
