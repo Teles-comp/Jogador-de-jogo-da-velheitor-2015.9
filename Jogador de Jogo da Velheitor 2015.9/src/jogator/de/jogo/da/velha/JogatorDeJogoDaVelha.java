@@ -286,19 +286,20 @@ class pvcom {
             altern = true;
         }
         //*/
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             way[i] = 0;
         }
         uj = 0;
     }
 
     //auxilia o computador a saber que caminho de jogadas deve seguir
-    int[] way = new int[3];
+    int[] way = new int[5];
 
     //aki é onde as jogadas do computador são 'pensadas'
     int computador() {
         int jogada = 0;
         //'altern' tb mostra quem começou a jogar
+        //computador sendo o PRIMEIRO a jogar
         if (altern) {
             if (way[0] == 0) {
                 jogada = 1;
@@ -352,7 +353,7 @@ class pvcom {
                 way[1] = 1;
             }
 
-            if (way[0] == 9) {
+            if (way[0] == 5) {
                 jogada = 3;
                 if (way[1] == 1) {
                     jogada = 7;
@@ -364,8 +365,20 @@ class pvcom {
                 way[1] = 1;
             }
 
-        } //
+        }
+        //computador sendo o SEGUNDO a jogar
         else {
+            if (way[0] == 0) {
+                if (uj == 1 || uj == 3  || uj == 7 || uj == 9) {
+                    way[0] = 1;
+                }else if (uj == 2  || uj == 4  || uj == 6 || uj == 8) {
+                    way[0] = 2;
+                } else if (uj == 5) {
+                    way[0] = 3;
+                }
+            }
+            
+            
 
         }
         return jogada;
