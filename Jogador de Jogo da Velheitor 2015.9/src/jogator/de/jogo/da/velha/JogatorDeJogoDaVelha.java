@@ -5,7 +5,6 @@
  */
 package jogator.de.jogo.da.velha;
 
-import java.util.Random;
 import java.util.Scanner;
 
 /**
