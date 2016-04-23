@@ -359,7 +359,7 @@ class pvcom {
                     if (uj != 7) {
                         jogada = 7;
                     } else {
-                        induz();
+                        jogada = induz();
                     }
                     if (way[2] == 1) {
                         jogada = induz();
