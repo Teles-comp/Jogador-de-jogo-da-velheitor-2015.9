@@ -356,7 +356,11 @@ class pvcom {
             if (way[0] == 5) {
                 jogada = 3;
                 if (way[1] == 1) {
-                    jogada = 7;
+                    if (uj != 7) {
+                        jogada = 7;
+                    } else {
+                        induz();
+                    }
                     if (way[2] == 1) {
                         jogada = induz();
                     }
@@ -365,21 +369,15 @@ class pvcom {
                 way[1] = 1;
             }
 
-        }
-        //computador sendo o SEGUNDO a jogar
-        else {
-            if (way[0] == 0) {
-                if (uj == 1 || uj == 3  || uj == 7 || uj == 9) {
-                    way[0] = 1;
-                }else if (uj == 2  || uj == 4  || uj == 6 || uj == 8) {
-                    way[0] = 2;
-                } else if (uj == 5) {
-                    way[0] = 3;
-                }
+        } //computador sendo o SEGUNDO a jogar
+        else if (way[0] == 0) {
+            if (uj == 1 || uj == 3 || uj == 7 || uj == 9) {
+                way[0] = 1;
+            } else if (uj == 2 || uj == 4 || uj == 6 || uj == 8) {
+                way[0] = 2;
+            } else if (uj == 5) {
+                way[0] = 3;
             }
-            
-            
-
         }
         return jogada;
     }
