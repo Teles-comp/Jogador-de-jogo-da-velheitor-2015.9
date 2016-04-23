@@ -4,6 +4,9 @@ Mais uma iniciativad da Fundação Teles, o Jogador de Jogo da Velheitor 2015.9 
 Observações: ainda não sei o que estou fazendo da minha vida
 
 
+A quem interessar, lógica do player vs computador está explicada nas imagens
+
+
 O programa ~~ainda está em desenvolvimento e ainda não foi comentado.~~ FICOU PRONTO Ô BUCETA GORDA
 
 
