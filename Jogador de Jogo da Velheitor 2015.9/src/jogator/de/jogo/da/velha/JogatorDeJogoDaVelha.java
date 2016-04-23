@@ -282,19 +282,7 @@ class pvcom {
         int jogada = 1;
         //'altern' tb mostra quem começou a jogar
         if (altern) {
-            boolean inicial = true;
-            for (int b = 1; b < 10 && inicial; b++) {
-                if (jdv.get_b(b) != 0) {
-                    inicial = false;
-                }
-            }
-
-            //se está na primeira jogada
-            if (inicial) {
-                jogada = 1;
-            } else {
-                if()
-            }
+            
         } //
         else {
 
